@@ -1,0 +1,131 @@
+run a mongosh in the terminal or powershell after the installation of mongodb and path setup
+
+Document : Mongo stores the data in the form of documents.
+Collection: MongoDB stores documents in collections.
+
+show dbs: show all the databases
+
+show collections: show all the collections.
+
+Insert data: 
+    - db.student.insertOne({name: "karthik", age: 23}); // stored in objects
+    - db.student.insertMany([{name: "karthik", age: 21}, {name: "sethu", age: 21}, {name: "maruthi raju", age: 23}]); // stored in the array of objects
+
+Find a data in DB:
+    - db.student.findOne({name: "sethu"});  // The 1st found name with value sethu is displayed - return the actual document.
+    - db.student.find({name: "sethu"}); // returns the cursor and displays the all search results in the databases.
+
+    Query Operators:
+        - Greaterthan: db.student.find({age: {$gt: 22}}); // returns the data whoose age is greater than 22.
+        - Lesserthan: db.student.find({age: {$lt: 22}}); // returns the data whoose age is less than 22.
+        - Equalto: db.student.find({age: {$eq: 22}}); // returns the data whoose age is less than 22.
+
+    For other Operators Refer: https://www.mongodb.com/docs/manual/reference/operator/query/
+
+Update in Database: 
+    syntax: db.student.updateOne(<filter>,<update>,<options>);
+        - db.student.updateOne({name: "sethu"}, {$set: {age: 21}});
+    For other operations in the update Refere: https://www.mongodb.com/docs/manual/reference/operator/update/
+
+
+Nesting: 
+    Ex:
+        - db.student.insertOne({name: "karthik", age: 21, performace: {marks: 21, grade: "A+"}}); //object inside an object
+
+Delete a data in DB:
+    Ex: 
+        - db.student.deleteOne({name: "karthik"}); // deletes a document of name with value 'karthik'
+
+Mongoose:
+    - A library that creates a connection between MongoDB and Node.js java script runtime environment.
+    - The steps to establish a connection
+        1. npm init -y
+        2. npm install mongoose
+        3. Create a .js file and require the mongoose
+            - const mongoose = require('mongoose');
+        4. Establish a connection to the server
+            main().then((result)=>{
+                console.log('connection successful');
+            }). catch((err)=>{
+                console.log(err);
+            })
+
+            async function main() {
+                await mongoose.connect("mongodb://127.0.0.1:27017/test"); //127.0.0.1 is a localhost
+            }
+
+            - basically mongoose.connect() method is an async function so we have to include a sync and await.
+            - the function main() return the promises we can print the promises using the then() and catch()
+            - then() :
+                - returns the block of code inside the then() when a connection is resolved.
+            - catch() :
+                - returns the block of code inside the catch() when a error occurs in the connection.
+        5. Run the .js file using command 'node filename.js'
+    
+Creating an UseSchema in the Mongoose:
+    - const userSchema = new mongoose.Schema({
+            name: String,
+            age: Number,
+            marks: Number,
+        });
+
+        - It's like a creating a outline in which the user to store the data.
+        - from the avove code 1st the need to enter the name with datatype String and age and then marks.
+
+Creating a collection in a mongodb using mongoose:
+    - const User = mongoose.model("User",userSchema);
+
+Inserting a data into the DB using mongoose:
+    -   const user1 = new User({name: "karthik", age: 21, marks: 91});
+        const user2 = new User({name: "Maruthi", age: 23, marks: 81});
+        const user3 = new User({name: "sethu", age: 31, marks: 77});
+        user1.save();
+        user2.save();
+        user3.save();
+        const user4 = new User({name: "nikhil", age: 11, marks: 67});
+
+        user4.save().then(res=>{
+            console.log('inserted successfully');
+        }).catch(err=>{
+            console.log(err);
+        });
+
+        - .save() method also returns the promises.
+
+Inserting a multiple data into the DB:
+    -   User.insertMany([
+            {name: "Poojitha", age: 21, marks: 99},
+            {name: "Preethan", age: 22, marks: 100},
+            {name: "Pudhota", age: 24, marks: 78}
+        ]);
+
+
+Find a data in the Database:
+    -   User.find({}).then(res=>{
+            console.log(res); // prints all the documents in the collection in the database
+        });
+
+
+Finding a data in the database using operators:
+    -   User.find({age: {$eq: 21}}).then(res=>{
+            console.log(res);
+        }).catch(err=>{
+            console.log(err);
+        });  // returns the data whoose age is equal to age 21.
+
+Finding a data in the database using the _id:
+    - User.findByIb("value");
+
+Update a data in the database:
+    -   User.updateOne({name: "Poojitha"}, {marks: 100}).then(res=>{
+            console.log(res);
+        }).catch(err=>{
+            console.log(err);
+        }); 
+
+        - Updates the data, marks to 100 of name poojitha
+
+Delete a data in the DB:
+    -   User.deleteOne({marks: 100}).then(res=>{
+            console.log(res)
+        });
