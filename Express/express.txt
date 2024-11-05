@@ -1,0 +1,97 @@
+express does 4 things
+
+1. listen for the incoming requests
+2. parse (converts any to json format)
+3. match response with routes (line '/home' are known as routes in express)
+4. response
+
+Express Installation:
+
+1. npm init (package.json)
+2. npm intall express
+3. create index.js (which acts a server)
+
+In Express/index.js
+
+To run the service run 'node index.js' in the terminal
+
+1. require the express framework
+
+    const express = require('express');
+    const app = express();
+
+2. The 1st point of express does is to listen, so 
+    - There is a method called app.listen() which takes two parameters
+        1. port - It may 3000 / 8080 or anything.
+        2. callback function - What should be happen when access the port is shown in the callback function.
+    Ex:
+        let port = 3000;
+        app.listen(port, () => {
+            console.log(`the server is running on port ${port}`);
+        });
+
+3. The express does is to task to take the requests, so
+    - we can use the app.use() method to send requests to the server port.
+    - app.use() has two parameters req,res.
+    Ex:
+        app.use((req,res) => {
+            console.log('Request Recieved');
+        });
+
+4. From the user request how to send the response.
+    - http requets are basically in text-based parse.
+    - this text-based is converted to request object by express (which is 2nd point that express does).
+    - to send the pesponse based on the user request we use the res.send() method.
+    - we can send anything like strings, objects, html tags in the response.
+    Ex:
+        1. app.use((req,res) => {
+            console.log('Request Recieved');
+            res.send("This is a basic response");
+        });
+
+        - We can see the response on the web browser when we run the server.
+
+        2. res.send( '<h1>Hello you have send the request</h1>' );
+
+5. Express 3rd does the match response with routes.
+
+    Routing:
+        - we can use the app.get() or app.post() methods for routing.
+        - It has two parameters 
+            1. routes
+            2. callback
+        Ex:
+            app.get("/apple", (req,res)=>{
+                res.send("You are in apple page");
+            });
+        - locahost:3000/apple -sends the response of you are in apple page
+        - if no route is matched but we have to send the response we use the '*'.
+
+        Ex: 
+            app.get("*", (req,res)=>{
+                res.send("Ok no route is matched");
+            });
+
+Package: 
+    nodemon:  
+        - helps to automatically restart the server when changes are made.
+        - to install npm install -g nodemon.
+        - to run the server we use the cmd 'nodemon index.js' insted of 'node index.js'
+
+Path Parameters: 
+    Ex:
+        app.get("/:username/:id", (req,res)=>{
+            let {username.id} = req.params;
+            res.send(`<h1>Welcome to userpage of ${username}`);
+        });
+
+        when we browse the localhost:3000/karthik/123 it sends the response of Welcome to the userpage of karthik.
+
+Search Queries:
+    Ex:
+        app.get("/search", (req,res)=>{
+            console.log(req.query);
+            let {q} = req.query;
+            res.send(`Hello ${q}`);
+        });
+
